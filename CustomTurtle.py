@@ -21,16 +21,24 @@ class CustomTurtle:
         self.c_screen = Screen()
         self.stored_turtles = []
 
-    def add_on_key(self, func, key):
-        self.c_screen.listen()
-        self.c_screen.onkey(key=key, fun=func)
+    def add_onkeypress(self, func, key):
+        self.c_screen.onkeypress(key=key, fun=func)
 
     def create_turtle(self, x=0, y=0, shape="square", color="#FFFFFF", penup=False):
         turtle = Turtle(shape=shape)
         turtle.color(color)
         if penup: turtle.penup()
         turtle.goto(x, y)
+        self.add_turtle(turtle)
+        return turtle
+
+    def add_turtle(self, turtle):
         self.stored_turtles.append(turtle)
+        return turtle
+
+    def return_turtle_from_index(self, index):
+        index = max(0, min(index, len(self.stored_turtles) - 1))
+        return self.stored_turtles[index]
 
     def move_all_turtles_forward(self, amount, penup_on_start=False, pendown_on_finish=False, sleep=0):
         for turtle in self.stored_turtles:
@@ -48,7 +56,7 @@ class CustomTurtle:
         self.c_screen.bgcolor(bg)
         self.c_screen.tracer(tracer)
 
-    def return_colliding_turtles(self, turtle, distance, include_self=False):
+    def return_colliding_turtles_with_distance(self, turtle, distance, include_self=False):
         colliding_turtles=[]
         for stored_turtle in self.stored_turtles:
             if stored_turtle is turtle and not include_self: continue
