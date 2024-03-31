@@ -48,5 +48,12 @@ class CustomTurtle:
         self.c_screen.bgcolor(bg)
         self.c_screen.tracer(tracer)
 
+    def return_colliding_turtles(self, turtle, distance, include_self=False):
+        colliding_turtles=[]
+        for stored_turtle in self.stored_turtles:
+            if stored_turtle is turtle and not include_self: continue
+            if stored_turtle.distance(turtle) < distance: colliding_turtles.append(stored_turtle)
+        return colliding_turtles
+
     def update_screen(self):
         self.c_screen.update()
