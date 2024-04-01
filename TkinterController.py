@@ -40,19 +40,16 @@ class TkinterController:
             self.current_window.mainloop()
 
     # Text, Background Color, Foreground Color, Width, Height, x_pos, y_pos, Font Size, Font Family, allow destroy
-    def add_label(self, text="Text Here", bg="#000000", fg="#ffffff", w=10, h=10, x_pos=0, y_pos=0, g_pos_x=0, g_pos_y=0, fs=14,
-                  ff="Helvetica", destroy_status=None):
+    def add_label(self, text="Text Here", bg="#000000", fg="#ffffff", w=0, h=0, x_pos=0, y_pos=0, g_pos_x=0, g_pos_y=0, fs=14, ff="Helvetica", destroy_status=None):
         if not self.current_window is None:
             self.current_window.add_label(text, bg, fg, w, h, x_pos, y_pos, g_pos_x, g_pos_y, fs, ff, destroy_status)
 
-    def add_button(self, text="Text Here", function_callback=None, bg="#000000", fg="#FFFFFF", w=10, h=10, x_pos=10,
-                   y_pos=10, g_pos_x=0, g_pos_y=0, fs=14, ff="Helvetica", destroy_status=None):
+    def add_button(self, text="Text Here", function_callback=None, bg="#000000", fg="#FFFFFF", w=0, h=0, x_pos=0, y_pos=0, g_pos_x=0, g_pos_y=0, fs=14, ff="Helvetica", destroy_status=None):
         if not self.current_window is None:
             self.current_window.add_button(text, function_callback, bg, fg, w, h, x_pos, y_pos, g_pos_x, g_pos_y, fs,
                                            ff, destroy_status)
 
-    def add_image_as_grid(self, card_image, w=5, h=5, pos_x=5, pos_y=5, g_pos_x=0, g_pos_y=0, offset_x=88, offest_y=129,
-                          numx=3, numy=2, index=0, destroy_status=None):
+    def add_image_as_grid(self, card_image, w=5, h=5, pos_x=0, pos_y=0, g_pos_x=0, g_pos_y=0, offset_x=88, offest_y=129, numx=3, numy=2, index=0, destroy_status=None):
         if not self.current_window is None:
             self.current_window.add_image_as_grid(card_image, w, h, pos_x, pos_y, g_pos_x, g_pos_y, offset_x, offest_y,
                                                   numx, numy, index, destroy_status)
