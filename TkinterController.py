@@ -1,5 +1,5 @@
-from tkinter import Tk, Label, Button
-from ThreadController import ThreadController
+from tkinter import Tk, Label, Button, StringVar, OptionMenu, Entry
+from Scripts.ThreadController import ThreadController
 from PIL import ImageTk, Image
 from enum import Enum
 import time
@@ -42,12 +42,23 @@ class TkinterController:
     # Text, Background Color, Foreground Color, Width, Height, x_pos, y_pos, Font Size, Font Family, allow destroy
     def add_label(self, text="Text Here", bg="#000000", fg="#ffffff", w=0, h=0, x_pos=0, y_pos=0, g_pos_x=0, g_pos_y=0, fs=14, ff="Helvetica", destroy_status=None):
         if not self.current_window is None:
-            self.current_window.add_label(text, bg, fg, w, h, x_pos, y_pos, g_pos_x, g_pos_y, fs, ff, destroy_status)
+            return self.current_window.add_label(text, bg, fg, w, h, x_pos, y_pos, g_pos_x, g_pos_y, fs, ff, destroy_status)
+        return None
 
     def add_button(self, text="Text Here", function_callback=None, bg="#000000", fg="#FFFFFF", w=0, h=0, x_pos=0, y_pos=0, g_pos_x=0, g_pos_y=0, fs=14, ff="Helvetica", destroy_status=None):
         if not self.current_window is None:
-            self.current_window.add_button(text, function_callback, bg, fg, w, h, x_pos, y_pos, g_pos_x, g_pos_y, fs,
-                                           ff, destroy_status)
+            return self.current_window.add_button(text, function_callback, bg, fg, w, h, x_pos, y_pos, g_pos_x, g_pos_y, fs,ff, destroy_status)
+        return None
+
+    def add_dropdown(self, options, function_callback=None, bg="#000000", fg="#FFFFFF", w=0, h=0, x_pos=0, y_pos=0, g_pos_x=0, g_pos_y=0, fs=14, ff="Helvetica", destroy_status=None):
+        if not self.current_window is None:
+            return self.current_window.add_dropdown(options, function_callback, bg, fg, w, h, x_pos, y_pos, g_pos_x, g_pos_y, fs, ff, destroy_status)
+        return None
+
+    def add_entry_field(self, placeholder_text, function_callback=None, bg="#000000", fg="#FFFFFF", w=0, h=0, x_pos=0, y_pos=0, g_pos_x=0, g_pos_y=0, fs=14, ff="Helvetica", destroy_status=None):
+        if not self.current_window is None:
+            return self.current_window.add_entry_field(placeholder_text, function_callback, bg, fg, w, h, x_pos, y_pos, g_pos_x, g_pos_y, fs, ff, destroy_status)
+        return None
 
     def add_image_as_grid(self, card_image, w=5, h=5, pos_x=0, pos_y=0, g_pos_x=0, g_pos_y=0, offset_x=88, offest_y=129, numx=3, numy=2, index=0, destroy_status=None):
         if not self.current_window is None:
@@ -103,17 +114,16 @@ class TkinterClass(Tk):
                 widget.destroy()
 
     # Text, Background Color, Foreground Color, Width, Height, x_pos, y_pos, Font Size, Font Family, allow destroy
-    def add_label(self, text="Text Here", bg="#000000", fg="#ffffff", w=10, h=10, x_pos=0, y_pos=0, g_pos_x=0,
-                  g_pos_y=0, fs=14, ff="Helvetica", destroy_status=None):
+    def add_label(self, text="Text Here", bg="#000000", fg="#ffffff", w=0, h=0, x_pos=0, y_pos=0, g_pos_x=0, g_pos_y=0, fs=14, ff="Helvetica", destroy_status=None):
         label = Label(self, text=text, font=(ff, fs), fg=fg, bg=bg)
         label.place(x=x_pos, y=y_pos)
         label.config(width=w, height=h)
         label.grid(column=g_pos_x, row=g_pos_y)
         if destroy_status is None: destroy_status = DestructionStage.DONT_DESTROY
         self.ignore_destruction[label] = destroy_status
+        return label
 
-    def add_button(self, text="Text Here", function_callback=None, bg="#000000", fg="#FFFFFF", w=10, h=10, x_pos=10,
-                   y_pos=10, g_pos_x=0, g_pos_y=0, fs=14, ff="Helvetica", destroy_status=None):
+    def add_button(self, text="Text Here", function_callback=None, bg="#000000", fg="#FFFFFF", w=0, h=0, x_pos=0, y_pos=0, g_pos_x=0, g_pos_y=0, fs=14, ff="Helvetica", destroy_status=None):
         def button_callback():
             if function_callback:
                 thread = ThreadController(max_threads=1).load_start(function_callback, daemon=True)
@@ -124,8 +134,40 @@ class TkinterClass(Tk):
         button.grid(column=g_pos_x, row=g_pos_y)
         if destroy_status is None: destroy_status = DestructionStage.DONT_DESTROY
         self.ignore_destruction[button] = destroy_status
+        return button
 
-    def add_image_as_grid(self, card_image, w=5, h=5, pos_x=5, pos_y=5, g_pos_x=0, g_pos_y=0, offset_x=88, offest_y=129,
+    def add_dropdown(self, options, function_callback=None, bg="#000000", fg="#FFFFFF", w=0, h=0, x_pos=0, y_pos=0, g_pos_x=0, g_pos_y=0, fs=14, ff="Helvetica", destroy_status=None):
+        def dropdown_callback(option):
+            if function_callback:
+                thread = ThreadController(max_threads=1).load_start(function_callback, True, option)
+
+        variable = StringVar(self)
+        variable.set(options[0])
+        variable.trace("w", lambda name, index, mode, var=variable: dropdown_callback(var))
+        options_menu = OptionMenu(self, variable, *options)
+        options_menu.place(x=x_pos, y=y_pos)
+        options_menu.config(width=w, height=h)
+        options_menu.grid(column=g_pos_x, row=g_pos_y)
+        if destroy_status is None: destroy_status = DestructionStage.DONT_DESTROY
+        self.ignore_destruction[options_menu] = destroy_status
+        return options_menu
+
+    def add_entry_field(self, placeholder_text, function_callback=None, bg="#000000", fg="#FFFFFF", w=0, h=0, x_pos=0, y_pos=0, g_pos_x=0, g_pos_y=0, fs=14, ff="Helvetica", destroy_status=None):
+        def dropdown_callback(option):
+            if function_callback:
+                thread = ThreadController(max_threads=1).load_start(function_callback, True, option)
+
+        var = StringVar()
+        var.trace("w", lambda name, index, mode, var=var: dropdown_callback(var))
+        entry_field = Entry(text=placeholder_text, textvariable=var, bg=bg, fg=fg, font=(ff, fs))
+        entry_field.place(x=x_pos, y=y_pos)
+        entry_field.grid(column=g_pos_x, row=g_pos_y)
+        if destroy_status is None: destroy_status = DestructionStage.DONT_DESTROY
+        self.ignore_destruction[entry_field] = destroy_status
+        return entry_field
+
+
+    def add_image_as_grid(self, card_image, w=0, h=0, pos_x=0, pos_y=0, g_pos_x=0, g_pos_y=0, offset_x=88, offest_y=129,
                           numx=3, numy=2, index=0, destroy_status=None):
         mathx = int(index % numx)
         mathy = int(index / numx)
@@ -141,3 +183,5 @@ class TkinterClass(Tk):
 
         if destroy_status is None: destroy_status = DestructionStage.DONT_DESTROY
         self.ignore_destruction[label] = destroy_status
+
+
