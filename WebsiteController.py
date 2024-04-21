@@ -4,10 +4,9 @@ from bs4 import BeautifulSoup
 import urllib3
 import time
 
-
 class WebsiteController:
-    def __init__(self, full_screen=False, executable_path='C:\chromedriver\chromedriver.exe'):
-        self.chrome_driver = webdriver.Chrome(executable_path=executable_path)
+    def __init__(self, full_screen=False):
+        self.chrome_driver = webdriver.Chrome()
         if full_screen:
             self.chrome_driver.maximize_window()
         urllib3.disable_warnings()
@@ -40,3 +39,6 @@ class WebsiteController:
 
     def update_webpage(self):
         return BeautifulSoup(self.chrome_driver.page_source, "html.parser")
+
+    def scroll_to_bottom(self):
+        self.chrome_driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
